@@ -1,0 +1,91 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+@font-face {
+  font-family: 'Universal Serif';
+  src: url('/universal-serif.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Universal Serif', sans-serif;
+}
+
+.nav {
+  position: absolute;
+  right: 50px;
+  top: 50px;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  /* max-width: 140px; */
+}
+
+.toggle span {
+  margin: 0 0.5rem;
+}
+
+.toggle input[type=checkbox] {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+.toggle input[type=checkbox]:checked+label {
+  background: #487886;
+}
+
+.toggle input[type=checkbox]:checked+label:after {
+  left: calc(100% - 2px);
+  transform: translateX(-100%);
+}
+
+.toggle label {
+  cursor: pointer;
+  width: 60px;
+  height: 34px;
+  background: rgba(0, 0, 0, 0.27);
+  display: block;
+  border-radius: 40px;
+  position: relative;
+}
+
+.toggle label:after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 30px;
+  height: 30px;
+  background: #fff;
+  border-radius: 40px;
+  transition: 0.3s;
+}
+
+.screen-reader-text {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  -webkit-clip-path: inset(50%);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute !important;
+  width: 1px;
+  word-wrap: normal !important;
+}

@@ -3,10 +3,9 @@
 import { Canvas, useFrame } from "@react-three/fiber"
 import { useGLTF, Float, Lightformer, Text, ContactShadows, Environment, MeshTransmissionMaterial } from "@react-three/drei"
 // import { EffectComposer, N8AO, TiltShift2 } from "@react-three/postprocessing"
-import { Route, Link, useLocation } from "wouter"
 import { suspend } from "suspend-react"
 import { easing } from "maath"
-import { useEffect, useMemo, useRef } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { AdditiveBlending, DoubleSide, MeshStandardMaterial, Vector3 } from "three"
 
 // Preloading 3D models
@@ -18,35 +17,23 @@ const targetCameraPosition = new Vector3();
 
 // Main application component
 export const App = () => {
-  // Using location for dynamic background color change
-  const [location] = useLocation();
-  const backgroundColor = location === '/' ? '#e0e0e0' : '#212121';
+  // Define a state variable to determine which model to display
+  const [isGhost, setIsGhost] = useState(false);
+  const backgroundColor = isGhost ? '#212121' : '#e0e0e0';
 
-  // Render
+  // The toggle function to switch between models
+  const toggleModel = () => setIsGhost(!isGhost);
+
   return (
   <>
-    {/* Setting up the 3D Canvas with shadow and camera settings */}
     <Canvas eventSource={document.getElementById("root")} eventPrefix="client" shadows camera={{ position: [0, 0, 20], fov: 50 }}>
-      {/* Setting the background color */}
       <color attach="background" args={[backgroundColor]} />
-      {/* Setting up the light source */}
       <spotLight position={[20, 20, 10]} penumbra={1} castShadow angle={0.2} />
-      {/* Adding the status */}
       <Status position={[0, 0, -10]} />
-      {/* Routes for different 3D models */}
       <Float floatIntensity={2}>
-        {/* The route for Tunic model */}
-        <Route path="/">
-          <Tunic scale={5} />
-        </Route>
-        {/* The route for Ghost Tunic model */}
-        <Route path="/tunic">
-          <TunicGhost scale={5} />
-        </Route>
+        {isGhost ? <TunicGhost scale={5} /> : <Tunic scale={5} />}
       </Float>
-      {/* Adding shadows */}
       <ContactShadows scale={100} position={[0, -7.5, 0]} blur={1} far={100} opacity={0.85} />
-      {/* Setting up the environment */}
       <Environment preset="city">
         <Lightformer intensity={8} position={[10, 5, 0]} scale={[10, 50, 1]} onUpdate={(self) => self.lookAt(0, 0, 0)} />
       </Environment>
@@ -55,13 +42,26 @@ export const App = () => {
         <N8AO aoRadius={1} intensity={2} />
         <TiltShift2 blur={0.2} />
       </EffectComposer> */}
-      {/* Adding camera rig */}
       <Rig />
     </Canvas>
-    {/* Navigation links */}
     <div className="nav">
-      <Link to="/">Tunic</Link>
-      <Link to="/tunic">Ghost Tunic</Link>
+      <div className="toggle">
+        <span>
+          <img src="/tunicIcon.png" alt="" width={50} />
+        </span>
+        <input
+          type="checkbox"
+          id="toggle-switch"
+          name="theme-switch"
+          className="theme-switch__input"
+          onChange={toggleModel}
+          checked={isGhost}
+      />
+        <label htmlFor="toggle-switch"><span className="screen-reader-text">Toggle Color Scheme</span></label>
+        <span>
+          <img src="/ghost_tunic.png" alt=""  width={50} />
+        </span>
+      </div>
     </div>
   </>
   )
